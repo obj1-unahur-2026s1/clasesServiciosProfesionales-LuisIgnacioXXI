@@ -1,9 +1,51 @@
-import example.pepita
+import profesionales.*
+import universidades.*
+import provincias.*
+import empresa.*
+import solicitantes.*
+
 
 describe "group of tests for pepita" {
+  const juana = new ProfesionalVinculado(
+    universidad = uniRosario
+  )
+  const melina = new ProfesionalLitoral(
+    universidad = uniCorrientes
+  )
+  const rocio = new ProfesionalLibre(
+    universidad = uniHurlingham,
+    honorariosPorHora = 5000,
+    provincias = #{santaFe, cordoba, buenosAires}
+  ) 
+  const luciana = new ProfesionalLibre(
+    universidad = uniRosario,
+    honorariosPorHora = 3200,
+    provincias = #{santaFe, entreRios}
+  )
+  const musk = new Empresa(
+    honorarioReferencia = 3500
+  )
+  method initialize() {
+    musk.agregarProfesional(juana)
+    musk.agregarProfesional(melina)
+    musk.agregarProfesional(rocio)
+    musk.agregarProfesional(luciana)
+  }
+  test "Dos profesionales estudiaron en rosario, uno en hurlingham, ninguno en san martin" {
+    assert.equals(2, musk.profesionalesEnUniversidad(uniRosario))
+    assert.equals(1, musk.profesionalesEnUniversidad(uniHurlingham))
+    assert.equals(0, musk.profesionalesEnUniversidad(uniSanMartin))
+  }
+  test "De profesionales caros solo Rocio" {
+    assert.equals(#{rocio}, musk.profesionalesCaros())
+  }
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+  test "Rosario, Corrientes y Hurlingham como universidades formadoras" {
+    assert.equals(#{uniRosario, uniCorrientes, uniHurlingham}, musk.universidadesFormadoras())
+  }
+
+  test "Juana como profesional mas barato" {
+    assert.equals(juana, musk.profesionalMasBarato())
   }
 
 }
